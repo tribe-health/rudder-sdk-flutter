@@ -21,7 +21,7 @@ class _PlatformChannelState extends State<PlatformChannel> {
         .putAge("22")
         .putEmail("saivenkatdesu@gmail.com")
         .putGender("Male");
-    RudderClient.identify("161FA04009", traits: traits);
+    RudderClient.identify(userId: "161FA04009", traits: traits);
     //platform.invokeMethod("identify", params);
   }
 
@@ -42,9 +42,27 @@ class _PlatformChannelState extends State<PlatformChannel> {
     // screen name , RudderProperty property
     // screen name, category, RudderProperty property, RudderOption option
     //  screen name, RudderProperty property, RudderOption option
+    RudderProperty screenProperty = new RudderProperty();
+    screenProperty.put("browser", "chrome");
+    screenProperty.put("device", "mac book pro");
+    RudderClient.screen("Walmart Cart", properties: screenProperty);
   }
-  void __group() {}
-  void __reset() {}
+
+  void __group() {
+    RudderTraits groupTraits = RudderTraits();
+    groupTraits.put("place", "kolkata");
+    groupTraits.put("size", "fiteen");
+    RudderClient.group("Integrations-Rudder", groupTraits: groupTraits);
+  }
+
+  void __reset() {
+    RudderClient.reset();
+  }
+
+  void __alias() {
+    RudderClient.alias("4009");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -56,7 +74,7 @@ class _PlatformChannelState extends State<PlatformChannel> {
               child: Text('Initialize SDK'),
               onPressed: () {
                 RudderConfigBuilder config = RudderConfigBuilder();
-                config.withDataPlaneUrl("https://dd3eb460155a.ngrok.io");
+                config.withDataPlaneUrl("https://54989f198999.ngrok.io");
                 RudderClient.getInstance("1n0JdVPZTRUIkLXYccrWzZwdGSx",
                     builder: config);
               },
@@ -80,6 +98,10 @@ class _PlatformChannelState extends State<PlatformChannel> {
             ElevatedButton(
               child: Text('Reset'),
               onPressed: __reset,
+            ),
+            ElevatedButton(
+              child: Text('Alias'),
+              onPressed: __alias,
             )
           ],
         ),

@@ -201,7 +201,7 @@ class RudderTraits {
   /// @return traits RudderTraits
   RudderTraits put(String key, dynamic value) {
     if (traitsMap["extras"] == null) {
-      traitsMap["extras"] = new Map();
+      traitsMap["extras"] = new Map<String, dynamic>();
     }
     Map<String, dynamic> extras = traitsMap["extras"];
     extras[key] = value;

@@ -3,21 +3,19 @@ package com.rudderstack.rudder_sdk_flutter;
 import androidx.annotation.NonNull;
 import com.rudderstack.android.sdk.core.RudderClient;
 import com.rudderstack.android.sdk.core.RudderConfig;
+import com.rudderstack.android.sdk.core.RudderMessageBuilder;
 import com.rudderstack.android.sdk.core.RudderProperty;
 import com.rudderstack.android.sdk.core.RudderTraits;
 import com.rudderstack.android.sdk.core.RudderTraitsBuilder;
-import io.flutter.embedding.android.FlutterActivity;
-import io.flutter.embedding.engine.FlutterEngine;
+import com.rudderstack.android.sdk.core.RudderOption;
+import com.rudderstack.rudder_sdk_flutter.RudderSdkFlutterApplication;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import java.lang.*;
 import java.util.*;
-import com.rudderstack.rudder_sdk_flutter.RudderSdkFlutterApplication;
 
 /** RudderSdkFlutterPlugin */
 public class RudderSdkFlutterPlugin
@@ -46,23 +44,105 @@ public class RudderSdkFlutterPlugin
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("initializeSDK")) {
       rudderClient = new RudderSdkFlutterApplication().initializeSDK(call);
-    } else if (
-      call.method.equals("identify")
-    ) {
+    } else if (call.method.equals("identify")) {
       HashMap<String, Object> argumentsMap = (HashMap<String, Object>) call.arguments;
-      String userId = (String) argumentsMap.get("userId");
-      RudderTraits traits = getRudderTraitsObject(
-        (Map<String, Object>) argumentsMap.get("traits")
-      );
-      rudderClient.identify(userId, traits, null);
+      String userId = null;
+      if (argumentsMap.containsKey("userId")) {
+        userId = (String) argumentsMap.get("userId");
+      }
+      RudderTraits traits = null;
+      if (argumentsMap.containsKey("traits")) {
+        traits =
+          getRudderTraitsObject(
+            (Map<String, Object>) argumentsMap.get("traits")
+          );
+      }
+      RudderOption options = null;
+      if (argumentsMap.containsKey("options")) {
+        options =
+          getRudderOptionsObject(
+            (List<Map<String, Object>>) argumentsMap.get("options")
+          );
+      }
+      if (traits == null) {
+        traits = new RudderTraits();
+      }
+      if (userId != null) {
+        traits.putId(userId);
+      }
+      rudderClient.identify(traits, options);
     } else if (call.method.equals("track")) {
       HashMap<String, Object> argumentsMap = (HashMap<String, Object>) call.arguments;
-      String eventName = (String) argumentsMap.get("eventName");
+      RudderMessageBuilder builder = new RudderMessageBuilder();
+      builder = builder.setEventName((String) argumentsMap.get("eventName"));
+      if (argumentsMap.containsKey("properties")) {
+        builder =
+          builder.setProperty(
+            new RudderProperty()
+            .putValue((Map<String, Object>) (argumentsMap.get("properties")))
+          );
+      }
+      if (argumentsMap.containsKey("options")) {
+        builder =
+          builder.setRudderOption(
+            getRudderOptionsObject(
+              (List<Map<String, Object>>) argumentsMap.get("options")
+            )
+          );
+      }
+      rudderClient.track(builder.build());
+    } else if (call.method.equals("screen")) {
+      HashMap<String, Object> argumentsMap = (HashMap<String, Object>) call.arguments;
+      RudderMessageBuilder builder = new RudderMessageBuilder();
+      builder.setEventName((String) argumentsMap.get("screenName"));
       RudderProperty properties = new RudderProperty();
-      properties.putValue(
-        (Map<String, Object>) (argumentsMap.get("properties"))
-      );
-      rudderClient.track(eventName, properties);
+      properties.put("name", (String) argumentsMap.get("screenName"));
+      if (argumentsMap.containsKey("properties")) {
+        properties.putValue(
+          (Map<String, Object>) (argumentsMap.get("properties"))
+        );
+      }
+      builder = builder.setProperty(properties);
+      if (argumentsMap.containsKey("options")) {
+        builder =
+          builder.setRudderOption(
+            getRudderOptionsObject(
+              (List<Map<String, Object>>) argumentsMap.get("options")
+            )
+          );
+      }
+      rudderClient.screen(builder.build());
+    } else if (call.method.equals("group")) {
+      HashMap<String, Object> argumentsMap = (HashMap<String, Object>) call.arguments;
+      RudderMessageBuilder builder = new RudderMessageBuilder();
+      builder = builder.setGroupId((String) argumentsMap.get("groupId"));
+      if (argumentsMap.containsKey("groupTraits")) {
+        builder.setGroupTraits(
+          getRudderTraitsObject(
+            (Map<String, Object>) argumentsMap.get("groupTraits")
+          )
+        );
+      }
+      if (argumentsMap.containsKey("options")) {
+        builder.setRudderOption(
+          getRudderOptionsObject(
+            (List<Map<String, Object>>) argumentsMap.get("options")
+          )
+        );
+      }
+      rudderClient.group(builder.build());
+    } else if (call.method.equals("alias")) {
+      HashMap<String, Object> argumentsMap = (HashMap<String, Object>) call.arguments;
+      RudderOption options = null;
+      if (argumentsMap.containsKey("options")) {
+        options =
+          getRudderOptionsObject(
+            (List<Map<String, Object>>) argumentsMap.get("options")
+          );
+      }
+      rudderClient.alias((String) argumentsMap.get("newId"), options);
+    } else if (call.method.equals("reset")) {
+      rudderClient.reset();
     } else {
       result.notImplemented();
     }
@@ -112,7 +192,7 @@ public class RudderSdkFlutterPlugin
         }
       }
     }
-    if (traitsMap.containsKey("age")) {
+    if (traitsMap.containsKey("age") && traitsMap.get("age") != null) {
       builder.setAge(Integer.parseInt((String) traitsMap.get("age")));
     }
     if (traitsMap.containsKey("birthday")) {
@@ -170,6 +250,18 @@ public class RudderSdkFlutterPlugin
     return builder.build();
   }
 
+  public RudderOption getRudderOptionsObject(
+    List<Map<String, Object>> traitsMap
+  ) {
+    RudderOption option = new RudderOption();
+    for (int i = 0; i < traitsMap.size(); i++) {
+      Map<String, Object> externalIdMap = (Map<String, Object>) traitsMap.get(
+        i
+      );
+      String type = (String) externalIdMap.get("type");
+      String id = (String) externalIdMap.get("id");
+      option.putExternalId(type, id);
+    }
+    return option;
+  }
 }
-
- 
