@@ -125,7 +125,7 @@ class RudderConfigBuilder {
   String __dataPlaneUrl = Constants.DATA_PLANE_URL;
 
   /// @param endPointUri Your data-plane Url
-  /// @return RudderConfig.RudderConfigBuilder
+  /// @return RudderConfigBuilder
   /// @deprecated use withDataPlaneUrl(String dataPlaneUrl)
   RudderConfigBuilder withEndPointUri(String endPointUri) {
     if (Utils.isEmpty(endPointUri)) {
@@ -142,7 +142,7 @@ class RudderConfigBuilder {
   }
 
   /// @param dataPlaneUrl Your data-plane Url
-  /// @return RudderConfig.Builder
+  /// @return RudderConfigBuilder
   RudderConfigBuilder withDataPlaneUrl(String dataPlaneUrl) {
     if (Utils.isEmpty(dataPlaneUrl)) {
       RudderLogger.logError(
@@ -160,7 +160,7 @@ class RudderConfigBuilder {
   int __flushQueueSize = Constants.FLUSH_QUEUE_SIZE;
 
   /// @param flushQueueSize No. of events you want to send in a batch (min = 1, max = 100)
-  /// @return RudderConfig.RudderConfigBuilder
+  /// @return RudderConfigBuilder
   RudderConfigBuilder withFlushQueueSize(int flushQueueSize) {
     if (flushQueueSize < 1 || flushQueueSize > 100) {
       RudderLogger.logError(
@@ -174,7 +174,7 @@ class RudderConfigBuilder {
   bool __isDebug = false;
 
   /// @param isDebug Set it true to initialize SDK in debug mode
-  /// @return RudderConfig.RudderConfigBuilder
+  /// @return RudderConfigBuilder
   /// @deprecated Use withLogLevel(int logLevel) instead
   RudderConfigBuilder withDebug(bool isDebug) {
     __isDebug = isDebug;
@@ -184,8 +184,8 @@ class RudderConfigBuilder {
   int __logLevel = RudderLogger.NONE;
 
   /// @param logLevel Determine how much log you want to generate.
-  ///                 Use RudderLogger.RudderLogLevel.NONE for production
-  /// @return RudderConfig.RudderConfigBuilder
+  /// Use RudderLogger.NONE for production
+  /// @return RudderConfigBuilder
   RudderConfigBuilder withLogLevel(int logLevel) {
     __logLevel = logLevel;
     return this;
@@ -194,7 +194,7 @@ class RudderConfigBuilder {
   int __dbThresholdCount = Constants.DB_COUNT_THRESHOLD;
 
   /// @param dbThresholdCount No of events to be persisted in DB
-  /// @return RudderConfig.RudderConfigBuilder
+  /// @return RudderConfigBuilder
   RudderConfigBuilder withDbThresholdCount(int dbThresholdCount) {
     __dbThresholdCount = dbThresholdCount;
     return this;
@@ -203,7 +203,7 @@ class RudderConfigBuilder {
   int __sleepTimeout = Constants.SLEEP_TIMEOUT;
 
   /// @param sleepCount No of seconds to wait before sending any batch
-  /// @return RudderConfig.RudderConfigBuilder
+  /// @return RudderConfigBuilder
   RudderConfigBuilder withSleepCount(int sleepCount) {
     __sleepTimeout = sleepCount;
     return this;
@@ -212,9 +212,9 @@ class RudderConfigBuilder {
   int __configRefreshInterval = Constants.CONFIG_REFRESH_INTERVAL;
 
   /// @param configRefreshInterval How often you want to fetch the config from the server.
-  ///                              Min : 1 hr
-  ///                              Max : 24 hrs
-  /// @return RudderConfig.RudderConfigBuilder
+  /// Min : 1 hr
+  /// Max : 24 hrs
+  /// @return RudderConfigBuilder
   RudderConfigBuilder withConfigRefreshInterval(int configRefreshInterval) {
     __configRefreshInterval = configRefreshInterval;
     return this;
@@ -223,7 +223,7 @@ class RudderConfigBuilder {
   bool __recordScreenViews = Constants.RECORD_SCREEN_VIEWS;
 
   /// @param shouldRecordScreenViews Whether we should record screen views automatically
-  /// @return RudderConfig.RudderConfigBuilder
+  /// @return RudderConfigBuilder
   RudderConfigBuilder withRecordScreenViews(bool shouldRecordScreenViews) {
     __recordScreenViews = shouldRecordScreenViews;
     return this;
@@ -232,8 +232,8 @@ class RudderConfigBuilder {
   bool __trackLifecycleEvents = Constants.TRACK_LIFECYCLE_EVENTS;
 
   /// @param shouldTrackLifecycleEvents Whether we should track Application lifecycle events automatically
-  ///                                   "Application Installed" and "Application Updated" will always be tracked
-  /// @return RudderConfig.RudderConfigBuilder
+  /// "Application Installed" and "Application Updated" will always be tracked
+  /// @return RudderConfigBuilder
   RudderConfigBuilder withTrackLifecycleEvents(
       bool shouldTrackLifecycleEvents) {
     __trackLifecycleEvents = shouldTrackLifecycleEvents;
@@ -243,7 +243,7 @@ class RudderConfigBuilder {
   String __controlPlaneUrl = Constants.CONTROL_PLANE_URL;
 
   /// @param configPlaneUrl Your hosted version of sourceConfig
-  /// @return RudderConfig.RudderConfigBuilder
+  /// @return RudderConfigBuilder
   /// @deprecated use withControlPlaneUrl(String controlPlaneUrl)
   RudderConfigBuilder withConfigPlaneUrl(String configPlaneUrl) {
     __controlPlaneUrl = configPlaneUrl;
@@ -251,14 +251,13 @@ class RudderConfigBuilder {
   }
 
   /// @param controlPlaneUrl Your hosted version of sourceConfig
-  /// @return RudderConfig.RudderConfigBuilder
+  /// @return RudderConfigBuilder
   RudderConfigBuilder withControlPlaneUrl(String controlPlaneUrl) {
     __controlPlaneUrl = controlPlaneUrl;
     return this;
   }
 
   /// Finalize your config building
-  ///
   /// @return RudderConfig
   RudderConfig build() {
     return RudderConfig().__RudderConfig(
