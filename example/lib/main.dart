@@ -168,6 +168,15 @@ class _PlatformChannelState extends State<PlatformChannel> {
     print("2nd alias call");
   }
 
+  final myController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    myController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -175,11 +184,21 @@ class _PlatformChannelState extends State<PlatformChannel> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            TextField(
+              controller: myController,
+              obscureText: true,
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Enter Your Data Plane Url',
+                hintStyle: TextStyle(color: Colors.grey),
+              ),
+            ),
             ElevatedButton(
               child: Text('Initialize SDK'),
               onPressed: () {
                 RudderConfigBuilder builder = RudderConfigBuilder();
-                builder.withDataPlaneUrl("https://6767347d5455.ngrok.io");
+                builder.withDataPlaneUrl(myController.text);
                 builder.withLogLevel(RudderLogger.VERBOSE);
                 builder.withRecordScreenViews(true);
                 // 1. with RudderConfig Object
@@ -196,14 +215,14 @@ class _PlatformChannelState extends State<PlatformChannel> {
               child: Text('Identify 0'),
               onPressed: __identify,
             ),
-            ElevatedButton(
-              child: Text('Identify 1'),
-              onPressed: __identify1,
-            ),
-            ElevatedButton(
-              child: Text('Identify 2'),
-              onPressed: __identify2,
-            ),
+            // ElevatedButton(
+            //   child: Text('Identify 1'),
+            //   onPressed: __identify1,
+            // ),
+            // ElevatedButton(
+            //   child: Text('Identify 2'),
+            //   onPressed: __identify2,
+            // ),
             ElevatedButton(
               child: Text('Track 0'),
               onPressed: __track,
@@ -212,14 +231,14 @@ class _PlatformChannelState extends State<PlatformChannel> {
               child: Text('Track 1'),
               onPressed: __track1,
             ),
-            ElevatedButton(
-              child: Text('Track 2'),
-              onPressed: __track2,
-            ),
-            ElevatedButton(
-              child: Text('Track 3'),
-              onPressed: __track3,
-            ),
+            // ElevatedButton(
+            //   child: Text('Track 2'),
+            //   onPressed: __track2,
+            // ),
+            // ElevatedButton(
+            //   child: Text('Track 3'),
+            //   onPressed: __track3,
+            // ),
             ElevatedButton(
               child: Text('Track 4'),
               onPressed: __track4,
@@ -232,10 +251,10 @@ class _PlatformChannelState extends State<PlatformChannel> {
               child: Text('Screen 1'),
               onPressed: __screen1,
             ),
-            ElevatedButton(
-              child: Text('Group'),
-              onPressed: __group,
-            ),
+            // ElevatedButton(
+            //   child: Text('Group'),
+            //   onPressed: __group,
+            // ),
             ElevatedButton(
               child: Text('Group 1'),
               onPressed: __group1,
@@ -244,10 +263,10 @@ class _PlatformChannelState extends State<PlatformChannel> {
               child: Text('Reset 0'),
               onPressed: __reset,
             ),
-            ElevatedButton(
-              child: Text('Alias 0'),
-              onPressed: __alias,
-            ),
+            // ElevatedButton(
+            //   child: Text('Alias 0'),
+            //   onPressed: __alias,
+            // ),
             ElevatedButton(
               child: Text('Alias 1'),
               onPressed: __alias1,
