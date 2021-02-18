@@ -4,8 +4,7 @@
 class Constants {
   // how often config should be fetched from the server (in hours) (2 hrs by default)
   static final int CONFIG_REFRESH_INTERVAL =
-      2; // probably change it to 1 hr, or every time
-  // default base url or rudder-backend-server
+  // default base url or rudder-server
   static final String DATA_PLANE_URL = "https://hosted.rudderlabs.com";
   // default flush queue size for the events to be flushed to server
   static final int FLUSH_QUEUE_SIZE = 30;
@@ -16,7 +15,7 @@ class Constants {
   // events will be flushed to server after sleepTimeOut seconds
   static final int SLEEP_TIMEOUT = 10;
   // config-plane url to get the config for the writeKey
-  static final String CONTROL_PLANE_URL = "https://api.rudderlabs.com";
+  static final String CONTROL_PLANE_URL = "https://api.rudderstack.com";
   // whether we should trackLifecycle events
   static final bool TRACK_LIFECYCLE_EVENTS = true;
   // whether we should record screen views automatically
